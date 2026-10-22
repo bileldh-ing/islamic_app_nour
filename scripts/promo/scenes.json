@@ -1,0 +1,11 @@
+[
+  {"type": "title", "asset": "title-intro", "duration": 4.2},
+  {"type": "phones", "phones": ["home-dark"], "caption": "cap-home", "duration": 6.5, "transition": "smoothleft"},
+  {"type": "phones", "phones": ["prayer-dark"], "caption": "cap-prayer", "duration": 6.0, "transition": "smoothleft"},
+  {"type": "phones", "phones": ["qibla-dark"], "caption": "cap-qibla", "duration": 6.5, "transition": "smoothleft"},
+  {"type": "phones", "phones": ["quran-dark", "reader-dark"], "caption": "cap-quran", "duration": 7.0, "transition": "smoothleft"},
+  {"type": "phones", "phones": ["azkar-dark", "tasbih-dark"], "caption": "cap-azkar", "duration": 6.5, "transition": "smoothleft"},
+  {"type": "phones", "phones": ["home-light", "prayer-light"], "caption": "cap-light", "light_bg": true, "duration": 6.5, "transition": "fade"},
+  {"type": "phones", "phones": ["more-dark", "calendar-dark"], "caption": "cap-tools", "duration": 6.5, "transition": "smoothleft"},
+  {"type": "title", "asset": "title-outro", "duration": 4.5, "transition": "fade"}
+]

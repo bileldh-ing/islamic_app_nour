@@ -52,6 +52,15 @@ class Store {
 class AppSettings {
   AppSettings({
     this.method = 'muslimWorldLeague',
+    this.tasbihReminder = false,
+    this.dailyAyah = false,
+    this.whiteDaysReminder = true,
+    this.salawatFriday = true,
+    this.sleepAzkar = true,
+    this.eveningAzkarTime = 30,
+    this.morningAzkarTime = 30,
+    this.methodAuto = true,
+    this.alertModes = const {},
     this.madhab = 'shafi',
     this.highLatitude = 'middleOfTheNight',
     this.hijriAdjust = 0,
@@ -76,6 +85,15 @@ class AppSettings {
   });
 
   final String method;
+  final bool tasbihReminder;
+  final bool dailyAyah;
+  final bool whiteDaysReminder;
+  final bool salawatFriday;
+  final bool sleepAzkar;
+  final int eveningAzkarTime;
+  final int morningAzkarTime;
+  final bool methodAuto; // true until the user picks a method: follow the country default
+  final Map<String, String> alertModes; // prayer -> off | notify | adhan (overrides prayerAlerts/adhanSound)
   final String madhab;
   final String highLatitude;
   final int hijriAdjust;
@@ -100,6 +118,15 @@ class AppSettings {
 
   AppSettings copyWith({
     String? method,
+    bool? tasbihReminder,
+    bool? dailyAyah,
+    bool? whiteDaysReminder,
+    bool? salawatFriday,
+    bool? sleepAzkar,
+    int? eveningAzkarTime,
+    int? morningAzkarTime,
+    bool? methodAuto,
+    Map<String, String>? alertModes,
     String? madhab,
     String? highLatitude,
     int? hijriAdjust,
@@ -124,6 +151,15 @@ class AppSettings {
   }) =>
       AppSettings(
         method: method ?? this.method,
+        tasbihReminder: tasbihReminder ?? this.tasbihReminder,
+        dailyAyah: dailyAyah ?? this.dailyAyah,
+        whiteDaysReminder: whiteDaysReminder ?? this.whiteDaysReminder,
+        salawatFriday: salawatFriday ?? this.salawatFriday,
+        sleepAzkar: sleepAzkar ?? this.sleepAzkar,
+        eveningAzkarTime: eveningAzkarTime ?? this.eveningAzkarTime,
+        morningAzkarTime: morningAzkarTime ?? this.morningAzkarTime,
+        methodAuto: methodAuto ?? this.methodAuto,
+        alertModes: alertModes ?? this.alertModes,
         madhab: madhab ?? this.madhab,
         highLatitude: highLatitude ?? this.highLatitude,
         hijriAdjust: hijriAdjust ?? this.hijriAdjust,
@@ -149,6 +185,15 @@ class AppSettings {
 
   Map<String, dynamic> toJson() => {
         'method': method,
+        'tasbihReminder': tasbihReminder,
+        'dailyAyah': dailyAyah,
+        'whiteDaysReminder': whiteDaysReminder,
+        'salawatFriday': salawatFriday,
+        'sleepAzkar': sleepAzkar,
+        'eveningAzkarTime': eveningAzkarTime,
+        'morningAzkarTime': morningAzkarTime,
+        'methodAuto': methodAuto,
+        'alertModes': alertModes,
         'madhab': madhab,
         'highLatitude': highLatitude,
         'hijriAdjust': hijriAdjust,
@@ -176,6 +221,15 @@ class AppSettings {
     final d = AppSettings();
     return AppSettings(
       method: j['method'] ?? d.method,
+      tasbihReminder: (j['tasbihReminder'] ?? d.tasbihReminder) as bool,
+      dailyAyah: (j['dailyAyah'] ?? d.dailyAyah) as bool,
+      whiteDaysReminder: (j['whiteDaysReminder'] ?? d.whiteDaysReminder) as bool,
+      salawatFriday: (j['salawatFriday'] ?? d.salawatFriday) as bool,
+      sleepAzkar: (j['sleepAzkar'] ?? d.sleepAzkar) as bool,
+      eveningAzkarTime: (j['eveningAzkarTime'] ?? d.eveningAzkarTime) as int,
+      morningAzkarTime: (j['morningAzkarTime'] ?? d.morningAzkarTime) as int,
+      methodAuto: (j['methodAuto'] ?? ((j['method'] ?? d.method) == d.method)) as bool,
+      alertModes: j['alertModes'] == null ? d.alertModes : Map<String, String>.from(j['alertModes'] as Map),
       madhab: j['madhab'] ?? d.madhab,
       highLatitude: j['highLatitude'] ?? d.highLatitude,
       hijriAdjust: (j['hijriAdjust'] ?? d.hijriAdjust) as int,

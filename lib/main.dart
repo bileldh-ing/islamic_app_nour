@@ -5,7 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
+import 'core/app_state.dart';
 import 'core/glass.dart';
+import 'core/open.dart';
+import 'core/nav.dart';
 import 'core/routes.dart';
 import 'core/theme.dart';
 import 'features/home/home_screen.dart';
@@ -13,6 +16,7 @@ import 'features/onboarding/onboarding_screen.dart';
 import 'features/prayer/prayer_screen.dart';
 import 'features/qibla/qibla_screen.dart';
 import 'features/quran/quran_home_screen.dart';
+import 'features/quran/quran_nav.dart';
 import 'features/tools/more_screen.dart';
 import 'services/demo.dart';
 import 'services/location_service.dart';
@@ -35,6 +39,7 @@ Future<void> main() async {
   } else {
     QuranService.load(); // warm up in background
   }
+  onboardingDone.value = Store.getBool('onboarded');
   await NotificationService.init();
   runApp(const NoorApp());
 }
@@ -73,7 +78,12 @@ class NoorApp extends StatelessWidget {
             ));
             return child!;
           },
-          home: DemoMode.on ? demoHome() : (Store.getBool('onboarded') ? const RootShell() : const OnboardingScreen()),
+          home: DemoMode.on
+              ? demoHome()
+              : ValueListenableBuilder<bool>(
+                  valueListenable: onboardingDone,
+                  builder: (context, done, _) => done ? const RootShell() : const OnboardingScreen(),
+                ),
         );
       },
     );
@@ -93,7 +103,6 @@ Widget demoHome() {
 class RootShell extends StatefulWidget {
   const RootShell({super.key, this.initialIndex = 0});
   final int initialIndex;
-  static final ValueNotifier<int> tab = ValueNotifier(0);
   @override
   State<RootShell> createState() => _RootShellState();
 }
@@ -104,13 +113,35 @@ class _RootShellState extends State<RootShell> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    RootShell.tab.value = widget.initialIndex;
+    rootTab.value = widget.initialIndex;
     WidgetsBinding.instance.addObserver(this);
+    NotificationService.pendingRoute.addListener(_consumeRoute);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _consumeRoute());
     _refresh();
+  }
+
+  /// Opens the screen a tapped notification points at (payload = route id).
+  void _consumeRoute() {
+    final r = NotificationService.pendingRoute.value;
+    if (r == null || !mounted) return;
+    NotificationService.pendingRoute.value = null;
+    final uri = Uri.parse(r);
+    const tabs = {'home': 0, 'prayer': 1, 'quran': 2, 'qibla': 3, 'more': 4};
+    if (tabs.containsKey(uri.path)) {
+      rootTab.value = tabs[uri.path]!;
+      return;
+    }
+    if (uri.path == 'reader') {
+      final s = int.tryParse(uri.queryParameters['surah'] ?? '') ?? 1;
+      openSurah(context, s, ayah: int.tryParse(uri.queryParameters['ayah'] ?? ''));
+      return;
+    }
+    openRoute(context, uri.path);
   }
 
   @override
   void dispose() {
+    NotificationService.pendingRoute.removeListener(_consumeRoute);
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -129,7 +160,7 @@ class _RootShellState extends State<RootShell> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final p = context.noor;
     return ValueListenableBuilder<int>(
-      valueListenable: RootShell.tab,
+      valueListenable: rootTab,
       builder: (context, index, _) => Scaffold(
         backgroundColor: p.bgBottom,
         extendBody: true,
@@ -139,7 +170,7 @@ class _RootShellState extends State<RootShell> with WidgetsBindingObserver {
           transitionBuilder: (c, a) => FadeTransition(opacity: a, child: c),
           child: KeyedSubtree(key: ValueKey(index), child: _pages[index]),
         ),
-        bottomNavigationBar: NoorNavBar(index: index, onChanged: (i) => RootShell.tab.value = i),
+        bottomNavigationBar: NoorNavBar(index: index, onChanged: (i) => rootTab.value = i),
       ),
     );
   }

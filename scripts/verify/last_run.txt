@@ -1,0 +1,33 @@
+tunis-20260320         fajr:+0 sunrise:+0 dhuhr:+0 asr:+1 maghrib:+0 isha:+0   asr vs NOAA ephemeris: +0.50
+tunis-20260621         fajr:+0 sunrise:-1 dhuhr:+0 asr:+0 maghrib:+0 isha:+0   asr vs NOAA ephemeris: +0.20
+tunis-20261023         fajr:+0 sunrise:+0 dhuhr:+0 asr:-1 maghrib:+0 isha:+0   asr vs NOAA ephemeris: -0.10
+makkah-20260320        fajr:+0 sunrise:+0 dhuhr:+0 asr:+1 maghrib:+0 isha:+0   asr vs NOAA ephemeris: +0.00
+makkah-20260621        fajr:+0 sunrise:+0 dhuhr:+0 asr:+0 maghrib:+0 isha:+0   asr vs NOAA ephemeris: -0.35
+makkah-20261023        fajr:+0 sunrise:+0 dhuhr:+0 asr:-1 maghrib:+0 isha:+0   asr vs NOAA ephemeris: -0.12
+cairo-20260320         fajr:+0 sunrise:+0 dhuhr:+1 asr:+1 maghrib:+0 isha:+0   asr vs NOAA ephemeris: +0.20
+cairo-20260621         fajr:+0 sunrise:+0 dhuhr:+1 asr:+0 maghrib:+0 isha:+0   asr vs NOAA ephemeris: -0.39
+cairo-20261023         fajr:+0 sunrise:+0 dhuhr:+1 asr:-1 maghrib:+0 isha:+0   asr vs NOAA ephemeris: +0.03
+istanbul-20260320      fajr:+0 sunrise:+0 dhuhr:+0 asr:+1 maghrib:+0 isha:+0   asr vs NOAA ephemeris: +4.14
+istanbul-20260621      fajr:+0 sunrise:+0 dhuhr:+0 asr:+0 maghrib:+0 isha:+0   asr vs NOAA ephemeris: +4.18
+istanbul-20261023      fajr:+0 sunrise:+0 dhuhr:+0 asr:-1 maghrib:+0 isha:+0   asr vs NOAA ephemeris: +4.51
+london-20260320        fajr:+0 sunrise:+0 dhuhr:+1 asr:+2 maghrib:+0 isha:+1   asr vs NOAA ephemeris: +0.26
+london-20260621        fajr:+0 sunrise:+0 dhuhr:+1 asr:+0 maghrib:+0 isha:+0   asr vs NOAA ephemeris: -0.19
+london-20261023        fajr:+0 sunrise:+0 dhuhr:+1 asr:-2 maghrib:+0 isha:+0   asr vs NOAA ephemeris: -0.36
+newyork-20260320       fajr:+0 sunrise:+0 dhuhr:+1 asr:+1 maghrib:+0 isha:+0   asr vs NOAA ephemeris: -0.08
+newyork-20260621       fajr:+0 sunrise:+0 dhuhr:+1 asr:+0 maghrib:+0 isha:+0   asr vs NOAA ephemeris: -0.19
+newyork-20261023       fajr:+0 sunrise:+0 dhuhr:+1 asr:-1 maghrib:+0 isha:+0   asr vs NOAA ephemeris: +0.39
+jakarta-20260320       fajr:+0 sunrise:+0 dhuhr:+1 asr:-1 maghrib:+0 isha:+0   asr vs NOAA ephemeris: -0.46
+jakarta-20260621       fajr:+0 sunrise:+0 dhuhr:+1 asr:+0 maghrib:+0 isha:+0   asr vs NOAA ephemeris: -0.32
+jakarta-20261023       fajr:+0 sunrise:+0 dhuhr:+1 asr:-1 maghrib:+0 isha:+0   asr vs NOAA ephemeris: -0.19
+karachi-20260320       fajr:+0 sunrise:+0 dhuhr:+1 asr:+1 maghrib:+0 isha:+0   asr vs NOAA ephemeris: +0.29
+karachi-20260621       fajr:+0 sunrise:+0 dhuhr:+1 asr:+0 maghrib:+0 isha:+0   asr vs NOAA ephemeris: -0.22
+karachi-20261023       fajr:+0 sunrise:+0 dhuhr:+1 asr:-1 maghrib:+0 isha:+0   asr vs NOAA ephemeris: -0.35
+qibla tunis      aladhan  112.666  ours  112.666  diff -0.0000
+qibla cairo      aladhan  136.137  ours  136.137  diff -0.0001
+qibla istanbul   aladhan  151.621  ours  151.621  diff -0.0000
+qibla london     aladhan  118.987  ours  118.987  diff -0.0000
+qibla newyork    aladhan   58.482  ours   58.482  diff -0.0000
+qibla jakarta    aladhan  295.152  ours  295.152  diff +0.0000
+qibla karachi    aladhan  267.741  ours  267.741  diff +0.0000
+
+24 city-days x 6 times, worst |diff| = 2 min, failures = 0
