@@ -87,8 +87,8 @@ void main() {
       expect(PrayerCalc.qibla(51.5074, -0.1278), closeTo(118.99, 0.5)); // London
       expect(PrayerCalc.qibla(40.7128, -74.0060), closeTo(58.48, 0.5)); // New York
     });
-    test('distance Tunis -> Kaaba is about 2,960 km', () {
-      expect(PrayerCalc.distanceToKaabaKm(36.8065, 10.1815), inInclusiveRange(2900, 3020));
+    test('distance Tunis -> Kaaba is about 3,330 km (great-circle)', () {
+      expect(PrayerCalc.distanceToKaabaKm(36.8065, 10.1815), inInclusiveRange(3280, 3380));
     });
   });
 

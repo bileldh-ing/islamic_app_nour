@@ -18,8 +18,8 @@ async function ready(page, extra = 3500) {
   await sleep(extra);
 }
 
-// RTL nav bar: tab 0 is on the right. Bar spans x 18..394, 72px tall, 14px from the bottom.
-const tab = (i) => ({ x: 394 - 47 - 94 * i, y: H - 14 - 36 });
+// v2 RTL nav bar: 5 tabs, tab 0 on the right. Bar spans x 16..396 (6px inner padding), 70px tall, 12px from the bottom.
+const tab = (i) => ({ x: 390 - 73.6 * (i + 0.5), y: H - 12 - 35 });
 
 const shots = [
   ['01-home', ''],
@@ -37,6 +37,16 @@ const shots = [
   ['13-shahada', 'screen=shahada'],
   ['14-settings', 'screen=settings'],
   ['15-onboarding', 'screen=onboarding'],
+  ['16-prayer', 'screen=prayer'],
+  ['17-home-light', 'theme=light'],
+  ['18-prayer-light', 'screen=prayer&theme=light'],
+  ['19-khatma', 'screen=khatma'],
+  ['20-hadith', 'screen=hadith'],
+  ['21-more', 'screen=more'],
+  ['22-azkar-morning', 'screen=azkar-morning'],
+  ['23-timetable', 'screen=timetable'],
+  ['24-zakat', 'screen=zakat&theme=light'],
+  ['25-quran-light', 'screen=quran&theme=light'],
 ];
 
 const browser = await chromium.launch({ args });
@@ -75,27 +85,31 @@ const browser = await chromium.launch({ args });
     await sleep(hold);
   };
 
-  // Home dashboard → tabs via the liquid nav bar.
-  await visit('', 1500, async () => { await scroll(900, 10, 160); await sleep(800); await scroll(-900, 6, 100); });
-  await page.mouse.click(tab(1).x, tab(1).y); await sleep(7000);              // Qibla locks on
-  await page.mouse.click(tab(2).x, tab(2).y); await sleep(1800);              // Quran index
-  await page.mouse.move(W / 2, H / 2); await scroll(1400, 10, 140); await sleep(800);
-  await page.mouse.click(tab(3).x, tab(3).y); await sleep(1500);              // Settings
+  // Home dashboard, then every tab through the liquid nav bar.
+  await visit('', 1500, async () => { await scroll(1100, 12, 160); await sleep(800); await scroll(-1100, 6, 100); });
+  await page.mouse.click(tab(1).x, tab(1).y); await sleep(2200);              // Prayer
+  await page.mouse.move(W / 2, H / 2); await scroll(800, 8, 150); await sleep(600);
+  await page.mouse.click(tab(2).x, tab(2).y); await sleep(1800);              // Quran
+  await page.mouse.move(W / 2, H / 2); await scroll(1200, 10, 140); await sleep(600);
+  await page.mouse.click(tab(3).x, tab(3).y); await sleep(7000);              // Qibla locks on
+  await page.mouse.click(tab(4).x, tab(4).y); await sleep(1500);              // More
   await page.mouse.move(W / 2, H / 2); await scroll(900, 8, 140); await sleep(800);
-  await page.mouse.click(tab(0).x, tab(0).y); await sleep(1500);
 
   // Feature screens.
   await visit('screen=reader&surah=1', 1500);
   await visit('screen=reader&surah=36', 800, async () => { await page.mouse.move(W / 2, H / 2); await scroll(1500, 12, 180); });
-  await visit('screen=azkar', 1500, async () => { await scroll(700, 6, 150); });
+  await visit('screen=khatma', 1800);
+  await visit('screen=azkar', 1200, async () => { await scroll(700, 6, 150); });
+  await visit('screen=azkar-morning', 1500);
   await visit('screen=tasbih', 800, async () => {
     for (let i = 0; i < 12; i++) { await page.mouse.click(W / 2, H * 0.52); await sleep(260); }
   });
   await visit('screen=names', 800, async () => { await page.mouse.move(W / 2, H / 2); await scroll(1600, 12, 160); });
-  await visit('screen=calendar', 2000);
-  await visit('screen=tracker', 2000);
-  await visit('screen=fasting', 2000);
-  await visit('screen=duas', 1200, async () => { await scroll(800, 6, 150); });
+  await visit('screen=calendar', 1800);
+  await visit('screen=hadith', 1500);
+  await visit('screen=tracker', 1800);
+  await visit('theme=light', 1500, async () => { await page.mouse.move(W / 2, H / 2); await scroll(900, 8, 150); });
+  await visit('screen=prayer&theme=light', 1800);
   await visit('', 2500);
 
   const v = page.video();

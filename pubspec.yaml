@@ -28,7 +28,8 @@ dependencies:
   http: any
   share_plus: any
   scrollable_positioned_list: ^0.3.8
-  phosphor_flutter: ^2.1.0
+  phosphor_flutter:
+    path: packages/phosphor_flutter
   url_launcher: any
   package_info_plus: any
   wakelock_plus: any
