@@ -155,7 +155,7 @@ jobs:
           path: build/ios/ipa/*.ipa
       - name: Upload to TestFlight
         if: env.P12_B64 != ''
-        uses: apple-actions/upload-testflight-build@v3
+        uses: apple-actions/upload-testflight-build@v5
         with:
           app-path: build/ios/ipa/noor.ipa
           issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
