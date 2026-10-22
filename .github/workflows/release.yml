@@ -84,7 +84,7 @@ jobs:
             build/app/outputs/flutter-apk/app-release.apk
       - name: GitHub release
         if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: |
             build/app/outputs/bundle/release/app-release.aab
