@@ -4,6 +4,8 @@
 <dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>نستخدم موقعك لحساب أوقات الصلاة واتجاه القبلة بدقة.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
