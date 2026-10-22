@@ -266,9 +266,8 @@ class _QiblaScreenState extends State<QiblaScreen> {
         ),
         children: [
           TileLayer(
-            urlTemplate: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-            subdomains: const ['a', 'b', 'c', 'd'],
-            userAgentPackageName: 'com.noor.noor',
+            urlTemplate: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+            userAgentPackageName: 'com.bileldh.noor',
             retinaMode: true,
           ),
           PolylineLayer(polylines: [
@@ -294,7 +293,7 @@ class _QiblaScreenState extends State<QiblaScreen> {
             ),
             Marker(point: kaaba, width: 36, height: 36, child: Image.asset('assets/images/kaaba.png')),
           ]),
-          const SimpleAttributionWidget(source: Text('© OpenStreetMap · CARTO', style: TextStyle(fontSize: 9))),
+          const SimpleAttributionWidget(source: Text('Tiles © Esri — Esri, HERE, Garmin, © OpenStreetMap', style: TextStyle(fontSize: 9))),
         ],
       );
 }

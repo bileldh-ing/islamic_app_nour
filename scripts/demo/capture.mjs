@@ -43,11 +43,11 @@ const browser = await chromium.launch({ args });
 
 // ---------- Screenshots ----------
 {
-  const ctx = await browser.newContext({ viewport: { width: W, height: H }, deviceScaleFactor: 2, locale: 'ar' });
+  const ctx = await browser.newContext({ viewport: { width: W, height: H }, deviceScaleFactor: 2, locale: 'ar', timezoneId: 'Africa/Tunis' });
   const page = await ctx.newPage();
   for (const [name, q] of shots) {
     await page.goto(url(q));
-    await ready(page, name === '02-qibla' ? 7000 : 4000);
+    await ready(page, name === '02-qibla' ? 8000 : name.startsWith('04') || name.startsWith('05') ? 6000 : 4000);
     await page.screenshot({ path: path.join(out, `${name}.png`) });
     console.log('shot', name);
   }
@@ -60,6 +60,7 @@ const browser = await chromium.launch({ args });
     viewport: { width: W, height: H },
     deviceScaleFactor: 2,
     locale: 'ar',
+    timezoneId: 'Africa/Tunis',
     recordVideo: { dir: path.join(out, 'raw'), size: { width: W * 2, height: H * 2 } },
   });
   const page = await ctx.newPage();

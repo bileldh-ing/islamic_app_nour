@@ -41,7 +41,11 @@ Future<void> main() async {
     LocationService.current.value = const UserLocation(lat: 36.8065, lng: 10.1815, city: 'تونس', country: 'تونس');
   }
   await NotificationService.init();
-  QuranService.load(); // warm up in background
+  if (DemoMode.on && DemoMode.screen == 'reader') {
+    await QuranService.load();
+  } else {
+    QuranService.load(); // warm up in background
+  }
   runApp(const NoorApp());
 }
 
