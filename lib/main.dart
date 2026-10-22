@@ -4,7 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'screens/azkar_screen.dart';
+import 'screens/calendar_screen.dart';
+import 'screens/duas_screen.dart';
+import 'screens/fasting_screen.dart';
 import 'screens/home_screen.dart';
+import 'screens/names_screen.dart';
+import 'screens/shahada_screen.dart';
+import 'screens/surah_reader_screen.dart';
+import 'screens/tasbih_screen.dart';
+import 'screens/tracker_screen.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/qibla_screen.dart';
 import 'screens/quran_screen.dart';
@@ -12,6 +21,7 @@ import 'screens/settings_screen.dart';
 import 'services/location_service.dart';
 import 'services/notification_service.dart';
 import 'services/quran_service.dart';
+import 'services/demo.dart';
 import 'services/storage.dart';
 import 'theme/app_theme.dart';
 import 'widgets/glass.dart';
@@ -27,6 +37,9 @@ Future<void> main() async {
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   await Store.init();
   LocationService.loadCached();
+  if (DemoMode.on) {
+    LocationService.current.value = const UserLocation(lat: 36.8065, lng: 10.1815, city: 'تونس', country: 'تونس');
+  }
   await NotificationService.init();
   QuranService.load(); // warm up in background
   runApp(const NoorApp());
@@ -48,19 +61,53 @@ class NoorApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      home: Store.getBool('onboarded') ? const RootShell() : const OnboardingScreen(),
+      home: DemoMode.on ? _demoHome() : (Store.getBool('onboarded') ? const RootShell() : const OnboardingScreen()),
     );
   }
 }
 
+Widget _demoHome() {
+  switch (DemoMode.screen) {
+    case 'onboarding':
+      return const OnboardingScreen();
+    case 'azkar':
+      return const AzkarScreen();
+    case 'duas':
+      return const DuasScreen();
+    case 'tasbih':
+      return const TasbihScreen();
+    case 'tracker':
+      return const TrackerScreen();
+    case 'calendar':
+      return const CalendarScreen();
+    case 'names':
+      return const NamesScreen();
+    case 'shahada':
+      return const ShahadaScreen();
+    case 'fasting':
+      return const FastingScreen();
+    case 'reader':
+      return SurahReaderScreen(surah: DemoMode.intParam('surah', 1));
+    case 'qibla':
+      return const RootShell(initialIndex: 1);
+    case 'quran':
+      return const RootShell(initialIndex: 2);
+    case 'settings':
+      return const RootShell(initialIndex: 3);
+    default:
+      return const RootShell();
+  }
+}
+
 class RootShell extends StatefulWidget {
-  const RootShell({super.key});
+  const RootShell({super.key, this.initialIndex = 0});
+  final int initialIndex;
   @override
   State<RootShell> createState() => _RootShellState();
 }
 
 class _RootShellState extends State<RootShell> with WidgetsBindingObserver {
-  int _index = 0;
+  late int _index = widget.initialIndex;
   final _pages = const [HomeScreen(), QiblaScreen(), QuranScreen(), SettingsScreen()];
 
   @override

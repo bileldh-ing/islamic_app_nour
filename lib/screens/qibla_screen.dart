@@ -7,6 +7,7 @@ import 'package:flutter_compass/flutter_compass.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart' show LatLng, Distance, LengthUnit;
 
+import '../services/demo.dart';
 import '../services/location_service.dart';
 import '../services/prayer_service.dart';
 import '../theme/app_theme.dart';
@@ -24,14 +25,17 @@ class _QiblaScreenState extends State<QiblaScreen> {
   double _smooth = 0;
   bool _aligned = false;
   bool _noSensor = false;
+  Timer? _demoTimer;
 
   static const kaaba = LatLng(21.4225241, 39.8261818);
 
   @override
   void initState() {
     super.initState();
-    final events = FlutterCompass.events;
-    if (events == null) {
+    final events = DemoMode.on ? null : FlutterCompass.events;
+    if (DemoMode.on) {
+      _startDemoSweep();
+    } else if (events == null) {
       _noSensor = true;
     } else {
       _sub = events.listen((e) {
@@ -53,8 +57,21 @@ class _QiblaScreenState extends State<QiblaScreen> {
     }
   }
 
+  /// Web demo: a phone being turned until it locks onto the Qibla.
+  void _startDemoSweep() {
+    final target = PrayerService.qibla(LocationService.current.value ?? const UserLocation(lat: 36.8065, lng: 10.1815, city: 'تونس'));
+    final start = DateTime.now();
+    _demoTimer = Timer.periodic(const Duration(milliseconds: 40), (_) {
+      final t = DateTime.now().difference(start).inMilliseconds / 1000.0;
+      final h = (target + 75 * math.cos(t * 1.4) * math.exp(-t / 2.2) + 360) % 360;
+      if (!mounted) return;
+      setState(() => _heading = h);
+    });
+  }
+
   @override
   void dispose() {
+    _demoTimer?.cancel();
     _sub?.cancel();
     super.dispose();
   }
