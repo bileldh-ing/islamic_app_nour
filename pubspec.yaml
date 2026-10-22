@@ -28,6 +28,10 @@ dependencies:
   http: any
   share_plus: any
   scrollable_positioned_list: ^0.3.8
+  phosphor_flutter: ^2.1.0
+  url_launcher: any
+  package_info_plus: any
+  wakelock_plus: any
 
 dev_dependencies:
   flutter_test:
@@ -41,15 +45,17 @@ flutter:
     - assets/data/
     - assets/images/
   fonts:
-    - family: Tajawal
+    - family: Plex
       fonts:
-        - asset: assets/fonts/Tajawal-Regular.ttf
-        - asset: assets/fonts/Tajawal-Medium.ttf
+        - asset: assets/fonts/IBMPlexSansArabic-Light.ttf
+          weight: 300
+        - asset: assets/fonts/IBMPlexSansArabic-Regular.ttf
+        - asset: assets/fonts/IBMPlexSansArabic-Medium.ttf
           weight: 500
-        - asset: assets/fonts/Tajawal-Bold.ttf
+        - asset: assets/fonts/IBMPlexSansArabic-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/IBMPlexSansArabic-Bold.ttf
           weight: 700
-        - asset: assets/fonts/Tajawal-ExtraBold.ttf
-          weight: 800
     - family: Amiri
       fonts:
         - asset: assets/fonts/Amiri-Regular.ttf

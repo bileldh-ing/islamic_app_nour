@@ -67,6 +67,12 @@ class AppSettings {
     this.translation = 'none',
     this.reciter = 'ar.alafasy',
     this.adjustments = const {},
+    this.tasbihGoal = 100,
+    this.dailyGoalPages = 4,
+    this.hapticsOn = true,
+    this.use24h = true,
+    this.accent = 'emerald',
+    this.themeMode = 'system',
   });
 
   final String method;
@@ -85,6 +91,12 @@ class AppSettings {
   final String translation; // none | en.sahih | fr.hamidullah
   final String reciter;
   final Map<String, int> adjustments; // minutes per prayer
+  final int tasbihGoal;
+  final int dailyGoalPages;
+  final bool hapticsOn;
+  final bool use24h;
+  final String accent;
+  final String themeMode;
 
   AppSettings copyWith({
     String? method,
@@ -103,6 +115,12 @@ class AppSettings {
     String? translation,
     String? reciter,
     Map<String, int>? adjustments,
+    int? tasbihGoal,
+    int? dailyGoalPages,
+    bool? hapticsOn,
+    bool? use24h,
+    String? accent,
+    String? themeMode,
   }) =>
       AppSettings(
         method: method ?? this.method,
@@ -121,6 +139,12 @@ class AppSettings {
         translation: translation ?? this.translation,
         reciter: reciter ?? this.reciter,
         adjustments: adjustments ?? this.adjustments,
+        tasbihGoal: tasbihGoal ?? this.tasbihGoal,
+        dailyGoalPages: dailyGoalPages ?? this.dailyGoalPages,
+        hapticsOn: hapticsOn ?? this.hapticsOn,
+        use24h: use24h ?? this.use24h,
+        accent: accent ?? this.accent,
+        themeMode: themeMode ?? this.themeMode,
       );
 
   Map<String, dynamic> toJson() => {
@@ -140,6 +164,12 @@ class AppSettings {
         'translation': translation,
         'reciter': reciter,
         'adjustments': adjustments,
+        'tasbihGoal': tasbihGoal,
+        'dailyGoalPages': dailyGoalPages,
+        'hapticsOn': hapticsOn,
+        'use24h': use24h,
+        'accent': accent,
+        'themeMode': themeMode,
       };
 
   factory AppSettings.fromJson(Map<String, dynamic> j) {
@@ -163,6 +193,12 @@ class AppSettings {
       translation: j['translation'] ?? d.translation,
       reciter: j['reciter'] ?? d.reciter,
       adjustments: j['adjustments'] == null ? d.adjustments : Map<String, int>.from(j['adjustments'] as Map),
+      tasbihGoal: (j['tasbihGoal'] ?? d.tasbihGoal) as int,
+      dailyGoalPages: (j['dailyGoalPages'] ?? d.dailyGoalPages) as int,
+      hapticsOn: (j['hapticsOn'] ?? d.hapticsOn) as bool,
+      use24h: (j['use24h'] ?? d.use24h) as bool,
+      accent: (j['accent'] ?? d.accent) as String,
+      themeMode: (j['themeMode'] ?? d.themeMode) as String,
     );
   }
 }

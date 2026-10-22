@@ -1,6 +1,6 @@
 import 'package:hijri/hijri_calendar.dart';
 
-import '../widgets/glass.dart';
+
 import 'storage.dart';
 
 class HijriDate {
@@ -16,7 +16,7 @@ class HijriDate {
   ];
 
   String get monthName => months[month - 1];
-  String get formatted => '${toArabicDigits(day)} $monthName ${toArabicDigits(year)} هـ';
+  String get formatted => '$day $monthName $year هـ';
 }
 
 class HijriService {
@@ -46,7 +46,7 @@ class HijriService {
   static int monthLength(int y, int m) => HijriCalendar().getDaysInMonth(y, m);
 
   static String gregorianLabel(DateTime d) =>
-      '${weekdays[d.weekday - 1]}، ${toArabicDigits(d.day)} ${gregMonths[d.month - 1]} ${toArabicDigits(d.year)}';
+      '${weekdays[d.weekday - 1]}، ${d.day} ${gregMonths[d.month - 1]} ${d.year}';
 
   /// Islamic occasions keyed by (month, day).
   static const events = <(int, int), String>{
