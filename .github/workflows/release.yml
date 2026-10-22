@@ -76,7 +76,7 @@ jobs:
         run: |
           flutter build appbundle --release --build-name=${{ needs.meta.outputs.version }} --build-number=${{ needs.meta.outputs.build }}
           flutter build apk --release --build-name=${{ needs.meta.outputs.version }} --build-number=${{ needs.meta.outputs.build }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: noor-android-${{ needs.meta.outputs.version }}
           path: |
@@ -148,7 +148,7 @@ jobs:
           dart run flutter_launcher_icons
           flutter build ipa --release --export-options-plist=ios/ExportOptions.plist \
             --build-name=${{ needs.meta.outputs.version }} --build-number=${{ needs.meta.outputs.build }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: env.P12_B64 != ''
         with:
           name: noor-ios-${{ needs.meta.outputs.version }}
