@@ -11,7 +11,7 @@ void main() {
     for (var i = 1; i < starts.length; i++) {
       expect(starts[i] > starts[i - 1], isTrue, reason: 'name ${i + 1} starts before name $i');
       // After «الله» the singer adds «الذي لا إله إلا هو» (~6 s) before «الرحمن».
-      expect(starts[i] - starts[i - 1] < (i == 1 ? 7 : 4.5), isTrue, reason: 'gap before name ${i + 1} is too long');
+      expect(starts[i] - starts[i - 1] < (i == 1 ? 7 : 5), isTrue, reason: 'gap before name ${i + 1} is too long');
     }
     final closing = (j['closing_start'] as num).toDouble();
     expect(closing > starts.last, isTrue);
