@@ -49,9 +49,9 @@ jobs:
           IN="-f concat -safe 0 -i raw/demo.ffconcat"
           # Full-frame, phone-shaped output (no cropping or padding).
           ffmpeg -y $IN -c:v libx264 -pix_fmt yuv420p -crf 20 -preset slow -movflags +faststart -vf "fps=30,scale=824:1830:flags=lanczos" demo.mp4
-          ffmpeg -y $IN -vf "fps=12,scale=412:-1:flags=lanczos,palettegen=stats_mode=diff" palette.png
-          ffmpeg -y $IN -i palette.png -lavfi "fps=12,scale=412:-1:flags=lanczos[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=4" demo.gif
-          ffprobe -v error -show_entries stream=width,height -of csv=p=0 demo.mp4 demo.gif
+          ffmpeg -y $IN -vf "fps=10,scale=360:-1:flags=lanczos,palettegen=stats_mode=diff" palette.png
+          ffmpeg -y $IN -i palette.png -lavfi "fps=10,scale=360:-1:flags=lanczos[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=4" demo.gif
+          for f in demo.mp4 demo.gif; do ffprobe -v error -show_entries stream=width,height -of csv=p=0 $f; done
           rm -rf raw palette.png
           ls -la
       - uses: actions/upload-artifact@v4
