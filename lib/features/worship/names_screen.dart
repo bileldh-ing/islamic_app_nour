@@ -4,6 +4,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../../core/glass.dart';
 import '../../core/theme.dart';
 import '../../services/content_service.dart';
+import 'names_recitation.dart';
 import 'worship_widgets.dart';
 
 /// The 99 Names of Allah in the order of the Tirmidhi narration (no. 3507).
@@ -17,9 +18,32 @@ class _NamesScreenState extends State<NamesScreen> {
   final _future = ContentService.names();
   final _search = TextEditingController();
   String _q = '';
+  final _player = NamesPlayer();
+  final _keys = List.generate(99, (_) => GlobalKey());
+  int _lastScrolled = -1;
+
+  @override
+  void initState() {
+    super.initState();
+    _player.init();
+    _player.phase.addListener(_follow);
+  }
+
+  /// Keeps the name being recited in view while the user is not searching.
+  void _follow() {
+    final ph = _player.phase.value;
+    if (!_player.playing || _q.isNotEmpty || ph < 1 || ph > 99 || ph == _lastScrolled) return;
+    _lastScrolled = ph;
+    final ctx = _keys[ph - 1].currentContext;
+    if (ctx != null) {
+      Scrollable.ensureVisible(ctx, alignment: 0.55, duration: const Duration(milliseconds: 650), curve: Curves.easeInOutCubic);
+    }
+  }
 
   @override
   void dispose() {
+    _player.phase.removeListener(_follow);
+    _player.dispose();
     _search.dispose();
     super.dispose();
   }
@@ -46,6 +70,8 @@ class _NamesScreenState extends State<NamesScreen> {
                 ]),
               ),
               const SizedBox(height: 14),
+              NamesRecitationCard(player: _player, names: names),
+              const SizedBox(height: 14),
               GlassSearchField(controller: _search, hint: 'ابحث عن اسم أو معنى', onChanged: (v) => setState(() => _q = v)),
               const SizedBox(height: 14),
               if (list.isEmpty)
@@ -56,7 +82,10 @@ class _NamesScreenState extends State<NamesScreen> {
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: list.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, mainAxisSpacing: 10, crossAxisSpacing: 10, childAspectRatio: 0.92),
-                  itemBuilder: (context, i) => _tile(context, list[i], names),
+                  itemBuilder: (context, i) => ValueListenableBuilder<int>(
+                    valueListenable: _player.phase,
+                    builder: (context, ph, _) => _tile(context, list[i], names, ph == list[i].number),
+                  ),
                 ),
               const SizedBox(height: 16),
               Text(
@@ -69,17 +98,38 @@ class _NamesScreenState extends State<NamesScreen> {
         ),
       );
 
-  Widget _tile(BuildContext context, AllahName n, List<AllahName> all) {
+  Widget _tile(BuildContext context, AllahName n, List<AllahName> all, bool live) {
     final p = context.noor;
-    return Glass(
-      radius: 22,
-      padding: const EdgeInsets.all(8),
-      onTap: () => _detail(context, n, all),
-      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text('${n.number}', style: NoorText.caption(context).copyWith(color: p.gold, fontWeight: FontWeight.w600)),
-        const SizedBox(height: 4),
-        FittedBox(fit: BoxFit.scaleDown, child: Text(n.arabic, style: NoorText.arabic(context, 22, w: FontWeight.w700).copyWith(height: 1.5))),
-      ]),
+    return KeyedSubtree(
+      key: _keys[n.number - 1],
+      child: AnimatedScale(
+        scale: live ? 1.07 : 1,
+        duration: const Duration(milliseconds: 380),
+        curve: Curves.easeOutBack,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 380),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(color: live ? p.accent : Colors.transparent, width: 1.6),
+            boxShadow: live ? [BoxShadow(color: p.accent.withValues(alpha: 0.35), blurRadius: 18, spreadRadius: -2)] : const [],
+          ),
+          child: Glass(
+            radius: 22,
+            padding: const EdgeInsets.all(8),
+            strong: live,
+            onTap: () => _detail(context, n, all),
+            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Text('${n.number}', style: NoorText.caption(context).copyWith(color: p.gold, fontWeight: FontWeight.w600)),
+              const SizedBox(height: 4),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(n.arabic,
+                    style: NoorText.arabic(context, 22, w: FontWeight.w700).copyWith(height: 1.5, color: live ? p.accent : null)),
+              ),
+            ]),
+          ),
+        ),
+      ),
     );
   }
 
@@ -115,6 +165,14 @@ class _NamesScreenState extends State<NamesScreen> {
                 },
               ),
               const Spacer(),
+              MiniAction(
+                icon: PhosphorIconsRegular.play,
+                onTap: () {
+                  Navigator.of(ctx).pop();
+                  _player.playName(n.number);
+                },
+              ),
+              const SizedBox(width: 10),
               MiniAction(icon: PhosphorIconsRegular.copy, onTap: () => copyText(ctx, '${n.arabic}\n${n.meaning}')),
               const SizedBox(width: 10),
               MiniAction(icon: PhosphorIconsRegular.shareNetwork, onTap: () => shareText('${n.arabic}\n${n.meaning}')),
