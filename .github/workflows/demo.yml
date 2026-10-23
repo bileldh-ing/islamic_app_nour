@@ -46,10 +46,13 @@ jobs:
         run: |
           command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg)
           cd docs/media
-          ffmpeg -y -i demo.webm -c:v libx264 -pix_fmt yuv420p -crf 26 -preset slow -movflags +faststart -vf "scale=720:-2,fps=30" demo.mp4
-          ffmpeg -y -i demo.webm -vf "fps=12,scale=300:-1:flags=lanczos,palettegen=stats_mode=diff" palette.png
-          ffmpeg -y -i demo.webm -i palette.png -lavfi "fps=12,scale=300:-1:flags=lanczos[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=4" demo.gif
-          rm -f demo.webm palette.png
+          IN="-f concat -safe 0 -i raw/demo.ffconcat"
+          # Full-frame, phone-shaped output (no cropping or padding).
+          ffmpeg -y $IN -c:v libx264 -pix_fmt yuv420p -crf 20 -preset slow -movflags +faststart -vf "fps=30,scale=824:1830:flags=lanczos" demo.mp4
+          ffmpeg -y $IN -vf "fps=12,scale=412:-1:flags=lanczos,palettegen=stats_mode=diff" palette.png
+          ffmpeg -y $IN -i palette.png -lavfi "fps=12,scale=412:-1:flags=lanczos[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=4" demo.gif
+          ffprobe -v error -show_entries stream=width,height -of csv=p=0 demo.mp4 demo.gif
+          rm -rf raw palette.png
           ls -la
       - uses: actions/upload-artifact@v4
         with:

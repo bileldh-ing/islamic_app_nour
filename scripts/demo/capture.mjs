@@ -71,9 +71,22 @@ const browser = await chromium.launch({ args });
     deviceScaleFactor: 2,
     locale: 'ar',
     timezoneId: 'Africa/Tunis',
-    recordVideo: { dir: path.join(out, 'raw'), size: { width: W * 2, height: H * 2 } },
   });
   const page = await ctx.newPage();
+  // Record with a CDP screencast at full device resolution. (Playwright's
+  // recordVideo draws a deviceScaleFactor-2 page into the top-left quarter of
+  // the frame, which produced a cropped, grey-padded video.)
+  const frameDir = path.join(out, 'raw', 'frames');
+  fs.mkdirSync(frameDir, { recursive: true });
+  const frames = [];
+  const cdp = await ctx.newCDPSession(page);
+  cdp.on('Page.screencastFrame', async (f) => {
+    const file = path.join(frameDir, `${String(frames.length).padStart(5, '0')}.jpg`);
+    fs.writeFileSync(file, Buffer.from(f.data, 'base64'));
+    frames.push({ file, t: f.metadata.timestamp });
+    try { await cdp.send('Page.screencastFrameAck', { sessionId: f.sessionId }); } catch {}
+  });
+  await cdp.send('Page.startScreencast', { format: 'jpeg', quality: 92, maxWidth: W * 2, maxHeight: H * 2, everyNthFrame: 1 });
   await page.mouse.move(W / 2, H / 2);
   const scroll = async (dy, steps = 6, pause = 120) => {
     for (let i = 0; i < steps; i++) { await page.mouse.wheel(0, dy / steps); await sleep(pause); }
@@ -112,10 +125,18 @@ const browser = await chromium.launch({ args });
   await visit('screen=prayer&theme=light', 1800);
   await visit('', 2500);
 
-  const v = page.video();
+  await cdp.send('Page.stopScreencast');
+  await sleep(300);
   await ctx.close();
-  fs.renameSync(await v.path(), path.join(out, 'demo.webm'));
-  fs.rmSync(path.join(out, 'raw'), { recursive: true, force: true });
+  // ffconcat list with each frame held until the next one arrived.
+  const lines = ['ffconcat version 1.0'];
+  frames.forEach((f, i) => {
+    const next = frames[i + 1]?.t ?? f.t + 1.5;
+    lines.push(`file '${path.resolve(f.file)}'`, `duration ${Math.max(0.001, next - f.t).toFixed(4)}`);
+  });
+  lines.push(`file '${path.resolve(frames[frames.length - 1].file)}'`);
+  fs.writeFileSync(path.join(out, 'raw', 'demo.ffconcat'), lines.join('\n') + '\n');
+  console.log(`screencast frames: ${frames.length}`);
 }
 
 await browser.close();
