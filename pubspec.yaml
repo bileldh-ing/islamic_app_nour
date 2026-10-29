@@ -32,7 +32,7 @@ dependencies:
     path: packages/phosphor_flutter
   url_launcher: any
   package_info_plus: any
-  wakelock_plus: any
+  wakelock_plus: 1.8.2
 
 dev_dependencies:
   flutter_test:
