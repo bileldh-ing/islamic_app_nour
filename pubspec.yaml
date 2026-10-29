@@ -14,7 +14,7 @@ dependencies:
   cupertino_icons: any
   adhan_dart: any
   geolocator: any
-  geocoding: any
+  geocoding: 5.0.1
   flutter_compass: any
   flutter_map: any
   latlong2: any
