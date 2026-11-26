@@ -12,7 +12,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   cupertino_icons: any
-  adhan_dart: any
+  adhan_dart: 2.0.2
   geolocator: any
   geocoding: any
   flutter_compass: any
